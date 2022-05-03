@@ -24,7 +24,6 @@ export const TodoPage = () => {
   }
 
   const deleteTask = async (taskId: string) => {
-    console.log('salve')
     await TodoService.delete(taskId);
     fetchUsers();
   }
