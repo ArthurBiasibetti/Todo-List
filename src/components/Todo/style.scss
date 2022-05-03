@@ -1,0 +1,57 @@
+.todo {
+  background-color: #6272a4;
+  width: 80%;
+  min-height: 200px;
+
+  padding: 2rem;
+  border-radius: 2rem;
+
+  color: #f8f8f2;
+}
+
+.add_button_title {
+  margin-left: .5rem;
+}
+
+
+
+.todo_title {
+  display: flex;
+  align-items: center;
+
+  padding: 0 0 2rem 0;
+
+  span {
+    margin-top: 5px;
+    margin-left: 1rem;
+  }
+}
+
+.todo_content {
+  input[type="checkbox"] {
+    margin-right: .5rem;
+  }
+
+  .todo_item:not(:first-child) {
+      margin-top: 1rem;
+    }
+
+  .checked_true {
+    text-decoration: line-through;
+    opacity: 0.8;
+  }
+}
+
+.add_task_button {
+  background: none;
+  border: none;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  padding: 0;
+
+  cursor: pointer;
+
+  color: #f8f8f2;
+}
