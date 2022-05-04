@@ -23,14 +23,8 @@ class TodoService {
     return data;
   }
 
-  static async update(title: string, description = '', complete: boolean, id: string ): Promise<void> {
-    const obj = {
-      title,
-      description,
-      complete
-    }
-
-    const { data } = await HttpClient.api.put(`/todos/${id}`, obj);
+  static async updateComplete(id: string, complete: boolean ): Promise<void> {
+    const { data } = await HttpClient.api.put(`/todos/${id}`, {complete});
     return data;
   }
 

@@ -28,14 +28,33 @@ export const TodoPage = () => {
     fetchUsers();
   }
 
+  const updateTask = async (taskId: string, complete: boolean) => {
+    await TodoService.updateComplete(taskId, complete)
+    fetchUsers();
+  }
+
   useEffect(() => {
     fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('focus', fetchUsers);
+
+    return function cleaneup() {
+      window.removeEventListener('focus', fetchUsers);
+    }
   }, [])
 
   return (
     <div className="main">
       <div className="content">
-        <Todo title="Lista de compras" tasks={tasks} handleTasks={addTask} handleDeleteTask={deleteTask}/>
+        <Todo
+          title="Lista de compras"
+          tasks={tasks}
+          handleAddTask={addTask}
+          handleDeleteTask={deleteTask}
+          handleUpdateTask={updateTask}
+        />
       </div>
     </div>
   )

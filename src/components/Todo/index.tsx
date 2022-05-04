@@ -10,9 +10,10 @@ type taskFilters = 'todos' | 'concluidos' | 'pendentes'
 export const Todo: React.FC<{
   title: string,
   tasks?: ITodo[],
-  handleTasks:  (task: ITodo) => {},
-  handleDeleteTask: (taskId: string) => {}
-}> = ({title, tasks = [], handleTasks, handleDeleteTask}) => {
+  handleAddTask:  (task: ITodo) => void,
+  handleDeleteTask: (taskId: string) => void,
+  handleUpdateTask: (taskId: string, complete: boolean) => void
+}> = ({title, tasks = [], handleAddTask, handleDeleteTask, handleUpdateTask}) => {
   const [isAdding, setIsAdding] = useState(false);
   const [taskFilter, setTaskFilter] = useState<taskFilters>('todos');
 
@@ -27,13 +28,13 @@ export const Todo: React.FC<{
   const handleCancelNewTask = () => { setIsAdding(false) };
 
   const handleAddNewTask = async (title: string, description: string) => {
-    handleTasks({id: '', title, description: description || 'Default description', complete: false});
+    handleAddTask({id: '', title, description: description || 'Default description', complete: false});
     setIsAdding(false);
   }
 
   // Colocar o UPDATE DA API
-  const handleChecked = (event: React.ChangeEvent<HTMLInputElement>, taskId: string) => {
-
+  const handleChecked = (event: React.ChangeEvent<HTMLInputElement>, task: ITodo) => {
+    handleUpdateTask(task.id, event.target.checked)
   }
 
   const handleTaskFilter = () => {
@@ -76,14 +77,16 @@ export const Todo: React.FC<{
         <div className="todo_content">
           <ul>
             {tasks.filter(handleFilter).map((task) => (
-              <TodoItem key={task.id} item={task} handleChecked={() => {}} handleDeleteTask={handleDeleteTask}/>
+              <TodoItem key={task.id} item={task} handleChecked={handleChecked} handleDeleteTask={handleDeleteTask}/>
             ))}
             <li className="todo_item add_task">
               {isAdding
               ? <TodoTaskForm handleCancel={handleCancelNewTask} handleAddTask={handleAddNewTask}/>
               : <button className="add_task_button" onClick={handleIsAddingTask}>
                 <i className="fas fa-solid fa-plus" />
-                <span className="add_button_title">Adicionar tarefa</span>
+                <span className="add_button_title">
+                  Adicionar tarefa
+                </span>
               </button> }
             </li>
           </ul>
