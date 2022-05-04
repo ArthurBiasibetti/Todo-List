@@ -4,16 +4,25 @@ import './style.scss';
 import { TodoItem, TodoTaskForm } from '../../components';
 
 import { ITodo } from '../../interfaces';
+import { changeFilterStatus, FilterStatus } from '../../enums';
 
 type taskFilters = 'todos' | 'concluidos' | 'pendentes'
 
 export const Todo: React.FC<{
   title: string,
   tasks?: ITodo[],
+  isLoadingTasks?: boolean,
   handleAddTask:  (task: ITodo) => void,
   handleDeleteTask: (taskId: string) => void,
   handleUpdateTask: (taskId: string, complete: boolean) => void
-}> = ({title, tasks = [], handleAddTask, handleDeleteTask, handleUpdateTask}) => {
+}> = ({
+  title,
+  tasks = [],
+  isLoadingTasks = false,
+  handleAddTask,
+  handleDeleteTask,
+  handleUpdateTask
+}) => {
   const [isAdding, setIsAdding] = useState(false);
   const [taskFilter, setTaskFilter] = useState<taskFilters>('todos');
 
@@ -38,21 +47,15 @@ export const Todo: React.FC<{
   }
 
   const handleTaskFilter = () => {
-    if(taskFilter === 'todos') {
-      setTaskFilter('concluidos');
-    } else if (taskFilter === 'concluidos') {
-      setTaskFilter('pendentes');
-    } else {
-      setTaskFilter('todos');
-    }
+    setTaskFilter(changeFilterStatus[taskFilter]);
   }
 
   const handleFilter = (task: ITodo) => {
-      if(taskFilter === 'todos'){
+      if(taskFilter === FilterStatus.todos){
         return task
-      } else if(taskFilter === 'concluidos' && task.complete) {
+      } else if(taskFilter === FilterStatus.concluidos && task.complete) {
         return task
-      } else if (taskFilter === 'pendentes' && !task.complete) {
+      } else if (taskFilter === FilterStatus.pendentes && !task.complete) {
         return task
       }
     }
@@ -76,9 +79,16 @@ export const Todo: React.FC<{
 
         <div className="todo_content">
           <ul>
-            {tasks.filter(handleFilter).map((task) => (
-              <TodoItem key={task.id} item={task} handleChecked={handleChecked} handleDeleteTask={handleDeleteTask}/>
-            ))}
+            {isLoadingTasks ? (
+                <li>
+                  Carregando tarefas...
+                </li>
+              ) : (
+                tasks.filter(handleFilter).map((task) => (
+                <TodoItem key={task.id} item={task} handleChecked={handleChecked} handleDeleteTask={handleDeleteTask}/>
+                ))
+              )
+            }
             <li className="todo_item add_task">
               {isAdding
               ? <TodoTaskForm handleCancel={handleCancelNewTask} handleAddTask={handleAddNewTask}/>
