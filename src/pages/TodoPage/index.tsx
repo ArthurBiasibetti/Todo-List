@@ -8,19 +8,27 @@ import { ITodo } from '../../interfaces';
 
 export const TodoPage = () => {
   const [tasks, setTasks] = useState<ITodo[]>([]);
+  const [isLoadingTasks, setIsLoadingTasks] = useState(false);
 
   const fetchUsers = async (): Promise<void> => {
     try {
+      setIsLoadingTasks(true);
       const data = await TodoService.todos();
       setTasks(data);
+
+      if(data){
+        setIsLoadingTasks(false);
+      }
     } catch (error) {
       console.error(error)
     }
   };
 
   const addTask = async (task: ITodo) => {
-    await TodoService.create(task.title, task.description, task.complete);
+    const result = await TodoService.create(task.title, task.description, task.complete);
     fetchUsers();
+
+    return result;
   }
 
   const deleteTask = async (taskId: string) => {
@@ -54,6 +62,7 @@ export const TodoPage = () => {
           handleAddTask={addTask}
           handleDeleteTask={deleteTask}
           handleUpdateTask={updateTask}
+          isLoadingTasks={isLoadingTasks}
         />
       </div>
     </div>
